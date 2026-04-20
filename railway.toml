@@ -1,6 +1,4 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "backend/Dockerfile"
-
-[deploy]
-startCommand = "node server.js"
+watchPatterns = ["backend/**"]

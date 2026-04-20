@@ -6,9 +6,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY package.json ./
+COPY backend/package.json ./
 RUN npm install --production
-COPY . .
+COPY backend/ .
 
 EXPOSE 3001
 CMD ["node", "server.js"]
