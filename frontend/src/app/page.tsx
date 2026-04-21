@@ -19,7 +19,7 @@ export default function Home() {
   const [preview, setPreview] = useState('');
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const onFile = (f: File | null) => {
     if (f && !f.name.toLowerCase().endsWith('.pptx')) {
