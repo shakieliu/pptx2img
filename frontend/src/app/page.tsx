@@ -21,6 +21,16 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const reset = () => {
+    setFile(null);
+    setPreview('');
+    setStatus('');
+    setError('');
+    setLoading(false);
+    canvasRef.current = null;
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
   const onFile = (f: File | null) => {
     if (f && !f.name.toLowerCase().endsWith('.pptx')) {
       setError('Please upload a .pptx file');
@@ -185,9 +195,14 @@ export default function Home() {
         </button>
 
         {preview && (
-          <button className="btn-download" onClick={download}>
-            Download {fmt.toUpperCase()}
-          </button>
+          <>
+            <button className="btn-download" onClick={download}>
+              Download {fmt.toUpperCase()}
+            </button>
+            <button className="btn-reset" onClick={reset}>
+              ↩ New Upload
+            </button>
+          </>
         )}
 
         {status && <p className="status">{status}</p>}

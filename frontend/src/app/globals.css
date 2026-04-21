@@ -47,6 +47,13 @@ h1{font-size:1.8rem;font-weight:700;margin-bottom:.25rem}
 }
 .btn-download:hover{background:var(--accent);color:#fff}
 
+.btn-reset{
+  margin-top:.5rem;width:100%;padding:.65rem;border:1px solid var(--border);border-radius:12px;
+  background:transparent;color:var(--text);font-size:.9rem;font-weight:500;cursor:pointer;
+  transition:all .15s;
+}
+.btn-reset:hover{background:#f0e8dc}
+
 /* Preview */
 .preview{margin-top:1.5rem;text-align:center}
 .preview img{max-width:100%;border-radius:8px;border:1px solid var(--border)}
