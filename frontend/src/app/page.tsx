@@ -51,13 +51,17 @@ export default function Home() {
     if (!file) return;
     setLoading(true);
     setError('');
-    setStatus('Uploading & converting…');
+    setStatus('📤 Uploading file…');
     setPreview('');
 
     try {
       const form = new FormData();
       form.append('file', file);
+
+      // Switch status after a short delay so user sees the upload step
+      const timer = setTimeout(() => setStatus('⏳ Converting slides… This may take 30-60s'), 1500);
       const res = await fetch(`${API}/api/convert`, { method: 'POST', body: form });
+      clearTimeout(timer);
       if (!res.ok) {
         const j = await res.json().catch(() => ({ error: res.statusText }));
         throw new Error(j.error || 'Conversion failed');
@@ -65,7 +69,7 @@ export default function Home() {
       const { images } = await res.json() as { images: string[]; count: number };
       if (!images.length) throw new Error('No slides found');
 
-      setStatus(`Got ${images.length} slides. Stitching…`);
+      setStatus(`🧩 Stitching ${images.length} slides…`);
 
       // Load all images
       const imgs = await Promise.all(
@@ -106,7 +110,7 @@ export default function Home() {
       canvasRef.current = canvas;
       const mimeType = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
       setPreview(canvas.toDataURL(mimeType, 0.92));
-      setStatus(`Done! ${images.length} slides stitched.`);
+      setStatus(`✅ Done! ${images.length} slides stitched.`);
     } catch (e: any) {
       setError(e.message);
       setStatus('');
@@ -191,8 +195,21 @@ export default function Home() {
         </div>
 
         <button className="btn-primary" disabled={!file || loading} onClick={generate}>
-          {loading ? 'Converting…' : 'Generate'}
+          {loading ? (
+            <span className="btn-loading">
+              <span className="spinner" />
+              Converting…
+            </span>
+          ) : 'Generate'}
         </button>
+
+        {loading && (
+          <div className="progress-bar-wrapper">
+            <div className="progress-bar-track">
+              <div className="progress-bar-fill" />
+            </div>
+          </div>
+        )}
 
         {preview && (
           <>
@@ -205,7 +222,7 @@ export default function Home() {
           </>
         )}
 
-        {status && <p className="status">{status}</p>}
+        {status && <p className={`status ${loading ? 'loading' : ''}`}>{status}</p>}
         {error && <p className="status error">❌ {error}</p>}
 
         {preview && (
