@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, DragEvent, ChangeEvent } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-type Cols = 1 | 2 | 3;
+type Cols = 1 | 2 | 3 | 4;
 type Fmt = 'png' | 'jpg';
 type Gap = 8 | 16 | 32;
 
@@ -191,7 +191,7 @@ export default function Home() {
         </div>
 
         <div className="controls">
-          <Toggle label="Columns" options={[1, 2, 3] as Cols[]} value={cols} onChange={setCols} />
+          <Toggle label="Columns" options={[1, 2, 3, 4] as Cols[]} value={cols} onChange={setCols} />
           <Toggle label="Format" options={['png', 'jpg'] as Fmt[]} value={fmt} onChange={setFmt} display={(v) => v.toUpperCase()} />
           <Toggle
             label="Gap"
