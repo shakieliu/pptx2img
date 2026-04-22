@@ -108,9 +108,12 @@ export default function Home() {
       });
 
       canvasRef.current = canvas;
-      const mimeType = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
-      setPreview(canvas.toDataURL(mimeType, 0.92));
-      setStatus(`✅ Done! ${images.length} slides stitched.`);
+      // Use blob URL for preview to avoid base64 size limits
+      const previewMime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
+      canvas.toBlob((blob) => {
+        if (blob) setPreview(URL.createObjectURL(blob));
+      }, previewMime, 1.0);
+      setStatus(`✅ Done! ${images.length} slides — ${canvas.width}×${canvas.height}px`);
     } catch (e: any) {
       setError(e.message);
       setStatus('');
@@ -123,10 +126,15 @@ export default function Home() {
     if (!canvasRef.current) return;
     const mimeType = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
     const ext = fmt === 'jpg' ? 'jpg' : 'png';
-    const link = document.createElement('a');
-    link.download = `slides.${ext}`;
-    link.href = canvasRef.current.toDataURL(mimeType, 0.92);
-    link.click();
+    canvasRef.current.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `slides.${ext}`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    }, mimeType, 1.0);
   };
 
   const Toggle = <T extends string | number>({
